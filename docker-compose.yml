@@ -4,7 +4,7 @@ services:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
     volumes:
-      - /mnt/data/.config/homeassistant:/config
+      - /mnt/data/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
     privileged: true
@@ -16,8 +16,8 @@ services:
       TZ: 'Europe/Madrid'
       WEBPASSWORD: "${PIHOLE_WEBPASSWORD}"
     volumes:
-      - /mnt/data/.config/pihole/etc:/etc/pihole
-      - /mnt/data/.config/etc-dnsmasq.d:/etc/dnsmasq.d
+      - /mnt/data/pihole/etc:/etc/pihole
+      - /mnt/data/etc-dnsmasq.d:/etc/dnsmasq.d
     cap_add:
       - NET_ADMIN
     network_mode: "host"
