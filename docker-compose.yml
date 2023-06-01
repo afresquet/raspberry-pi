@@ -2,7 +2,7 @@ version: '3'
 services:
   homeassistant:
     container_name: homeassistant
-    image: "ghcr.io/home-assistant/home-assistant:stable"
+    image: ghcr.io/home-assistant/home-assistant:stable
     volumes:
       - /mnt/data/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
@@ -13,12 +13,32 @@ services:
     container_name: pihole
     image: pihole/pihole:latest
     environment: 
-      TZ: 'Europe/Madrid'
-      WEBPASSWORD: "${PIHOLE_WEBPASSWORD}"
+      TZ: Europe/Madrid
+      WEBPASSWORD: ${PIHOLE_WEBPASSWORD}
     volumes:
       - /mnt/data/pihole/etc:/etc/pihole
       - /mnt/data/etc-dnsmasq.d:/etc/dnsmasq.d
     cap_add:
       - NET_ADMIN
-    network_mode: "host"
+    network_mode: host
     restart: unless-stopped
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Madrid
+      PEERS: 5
+    volumes:
+      - /mnt/data/wireguard:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+
