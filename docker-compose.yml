@@ -41,4 +41,17 @@ services:
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
-
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Madrid
+    volumes:
+      - /mnt/data/jellyfin:/config
+      - /mnt/data/Movies:/data/movies
+      - /mnt/data/Series:/data/tvshows
+    ports:
+      - 8096:8096
+    restart: unless-stopped
