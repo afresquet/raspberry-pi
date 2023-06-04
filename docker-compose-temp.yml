@@ -11,7 +11,7 @@ services:
       PGID: 1000
       TZ: ${TZ}
     volumes:
-      - /etc/wireguard/torrent.conf:/config/wg0.conf
+      - ${STORAGE}/wg0.conf:/config/wg0.conf
       - /lib/modules:/lib/modules
     ports:
       - 9091:9091/tcp
@@ -104,4 +104,18 @@ services:
       - ${STORAGE}/Downloads:/downloads
     ports:
       - 8686:8686
+    restart: unless-stopped
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - ${STORAGE}/readarr:/config
+      - ${STORAGE}/Books:/books
+      - ${STORAGE}/Downloads:/downloads
+    ports:
+      - 8787:8787
     restart: unless-stopped
