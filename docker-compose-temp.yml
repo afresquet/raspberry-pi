@@ -1,0 +1,39 @@
+version: '3'
+services:
+  wireguard-transmission:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard-transmission
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - /etc/wireguard/torrent.conf:/config/wg0.conf
+      - /lib/modules:/lib/modules
+    ports:
+      - 9091:9091/tcp
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    depends_on:
+      - wireguard-transmission
+    network_mode: service:wireguard-transmission
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+      USER: ${TRANSMISSION_USER}
+      PASS: ${TRANSMISSION_PASS}
+      PEERPORT: ${TRANSMISSION_PORT}
+    volumes:
+      - ${STORAGE}/transmission:/config
+      - ${STORAGE}/Downloads:/downloads
+      - ${STORAGE}/Torrents:/watch
+    restart: unless-stopped
