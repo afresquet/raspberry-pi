@@ -37,3 +37,71 @@ services:
       - ${STORAGE}/Downloads:/downloads
       - ${STORAGE}/Torrents:/watch
     restart: unless-stopped
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - ${STORAGE}/jellyfin:/config
+      - ${STORAGE}/Series:/data/tvshows
+      - ${STORAGE}/Movies:/data/movies
+    ports:
+      - 8096:8096
+    restart: unless-stopped
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - ${STORAGE}/prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - ${STORAGE}/radarr:/config
+      - ${STORAGE}/Movies:/movies
+      - ${STORAGE}/Downloads:/downloads
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - ${STORAGE}/sonarr:/config
+      - ${STORAGE}/Series:/tv
+      - ${STORAGE}/Downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: ${TZ}
+    volumes:
+      - ${STORAGE}/lidarr:/config
+      - ${STORAGE}/Music:/music
+      - ${STORAGE}/Downloads:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
